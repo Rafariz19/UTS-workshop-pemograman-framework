@@ -1,0 +1,19 @@
+{
+  "name": "server-b",
+  "version": "1.0.0",
+  "description": "Server B - Menerima data terenkripsi, simpan ke DB B, dekripsi data, dan sajikan via JWT API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": ["decryption", "aes-256-gcm", "jwt", "express", "mysql2"],
+  "author": "Mahasiswa",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.12.0"
+  }
+}

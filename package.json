@@ -1,0 +1,12 @@
+{
+  "name": "uts-framework-programming",
+  "version": "1.0.0",
+  "description": "Tugas UTS Framework Programming - Enkripsi & Dekripsi Dua Database Dua Server",
+  "scripts": {
+    "start:server-a": "node tugas-encrypt-decrypt/server-a/src/server.js",
+    "start:server-b": "node tugas-encrypt-decrypt/server-b/src/server.js",
+    "test": "node tugas-encrypt-decrypt/test/test-flow.js"
+  },
+  "author": "Rafael",
+  "license": "ISC"
+}

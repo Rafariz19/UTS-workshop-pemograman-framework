@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "c8a41df5-0d22-4a0b-9df0-7d7dcf328001",
+    "name": "Tugas Encrypt Decrypt - UTS Framework Programming",
+    "description": "Koleksi Postman untuk pengujian proses ENCRYPT dan DECRYPT antara dua database (db_a & db_b) melalui Server A (Port 3001) dan Server B (Port 3002).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "server_a_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "server_b_url",
+      "value": "http://localhost:3002",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Server B - Login (Dapatkan Token JWT)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set('jwt_token', jsonData.token);",
+              "    console.log('JWT Token tersimpan di variabel koleksi:', jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{server_b_url}}/api/login",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        },
+        "description": "Mengirimkan kredensial login ke Server B untuk mendapatkan JWT Bearer token."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Server A - POST Kirim Data (Langkah 1 & 2)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{server_a_url}}/api/kirim-data",
+          "host": [
+            "{{server_a_url}}"
+          ],
+          "path": [
+            "api",
+            "kirim-data"
+          ]
+        },
+        "description": "Server A mengambil data dari db_a, mengenkripsi tiap field (AES-256-GCM), lalu mengirimkannya ke Server B (POST /api/terima-data) yang kemudian menyimpannya ke db_b."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Server B - POST Terima Data (Manual Testing Endpoint)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kategori\": [\n    {\n      \"id\": 99,\n      \"nama_kategori\": \"G21uU904X/0290uD:X/U61D0H4Y9mYx80p08dBA==:W385VfN6t1g3Z74=\"\n    }\n  ],\n  \"produk\": [\n    {\n      \"id\": 99,\n      \"nama_produk\": \"G21uU904X/0290uD:X/U61D0H4Y9mYx80p08dBA==:cM3kG52oP1qR\",\n      \"harga_produk\": \"G21uU904X/0290uD:X/U61D0H4Y9mYx80p08dBA==:94vU914v\",\n      \"foto_produk\": \"G21uU904X/0290uD:X/U61D0H4Y9mYx80p08dBA==:bGFwdG9wLmpwZw==\",\n      \"id_kategori\": 99\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{server_b_url}}/api/terima-data",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "terima-data"
+          ]
+        },
+        "description": "Endpoint yang dipanggil oleh Server A untuk menyimpan data terenkripsi ke db_b menggunakan ON DUPLICATE KEY UPDATE."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Server B - GET Kategori (Dengan Token JWT - Sukses Dekripsi)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{server_b_url}}/api/kategori",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "kategori"
+          ]
+        },
+        "description": "Server B mengambil data ciphertext dari db_b (Langkah 3), mendekripsinya (Langkah 4), dan mengembalikan plaintext JSON."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Server B - GET Produk (Dengan Token JWT - Sukses Dekripsi)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{server_b_url}}/api/produk",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "produk"
+          ]
+        },
+        "description": "Server B mengambil data produk dari db_b berelasi dengan tabel kategori (Langkah 3), mendekripsi seluruh field teks (Langkah 4), dan menyajikannya sebagai plaintext JSON."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Server B - GET Kategori (Tanpa Token - Ekspektasi 401)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{server_b_url}}/api/kategori",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "kategori"
+          ]
+        },
+        "description": "Menguji pengamanan middleware JWT: Permintaan tanpa header Authorization wajib ditolak dengan HTTP 401 Unauthorized."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Server B - GET Produk (Tanpa Token - Ekspektasi 401)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{server_b_url}}/api/produk",
+          "host": [
+            "{{server_b_url}}"
+          ],
+          "path": [
+            "api",
+            "produk"
+          ]
+        },
+        "description": "Menguji pengamanan middleware JWT: Permintaan tanpa header Authorization wajib ditolak dengan HTTP 401 Unauthorized."
+      },
+      "response": []
+    }
+  ]
+}

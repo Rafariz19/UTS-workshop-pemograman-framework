@@ -1,0 +1,12 @@
+{
+  "name": "tugas-encrypt-decrypt",
+  "version": "1.0.0",
+  "description": "Tugas UTS Framework Programming - Enkripsi & Dekripsi Lintas Database dan Server (AES-256-GCM + JWT)",
+  "scripts": {
+    "start:server-a": "node server-a/src/server.js",
+    "start:server-b": "node server-b/src/server.js",
+    "test": "node test/test-flow.js"
+  },
+  "author": "Mahasiswa",
+  "license": "ISC"
+}
