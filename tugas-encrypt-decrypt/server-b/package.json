@@ -7,10 +7,17 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
-  "keywords": ["decryption", "aes-256-gcm", "jwt", "express", "mysql2"],
+  "keywords": [
+    "decryption",
+    "aes-256-gcm",
+    "jwt",
+    "express",
+    "mysql2"
+  ],
   "author": "Mahasiswa",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",

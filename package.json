@@ -1,12 +1,18 @@
 {
-  "name": "uts-framework-programming",
+  "name": "tugas-fallback-mechanism",
   "version": "1.0.0",
-  "description": "Tugas UTS Framework Programming - Enkripsi & Dekripsi Dua Database Dua Server",
+  "description": "Tugas 11 Pemrograman Framework - Fallback Mechanism (Frontend React JS) dengan Backend Lintas Server & Database (Berasal dari tugas Encrypt/Decrypt AES-256-GCM & JWT)",
   "scripts": {
+    "start:a": "node tugas-encrypt-decrypt/server-a/src/server.js",
+    "start:b": "node tugas-encrypt-decrypt/server-b/src/server.js",
+    "start:client": "npm --prefix client run dev",
     "start:server-a": "node tugas-encrypt-decrypt/server-a/src/server.js",
     "start:server-b": "node tugas-encrypt-decrypt/server-b/src/server.js",
+    "build:client": "npm --prefix client run build",
+    "generate:pdf": "node generate-pdf.js",
     "test": "node tugas-encrypt-decrypt/test/test-flow.js"
   },
-  "author": "Rafael",
+
+  "author": "Rafael Rizky Luga Tanjung (NRP: 3125522007)",
   "license": "ISC"
 }

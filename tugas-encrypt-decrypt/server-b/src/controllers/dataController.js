@@ -124,15 +124,21 @@ async function getKategori(req, res) {
     console.table(decryptedRows);
     console.log('============================================================\n');
 
+    // Tandai header respon bahwa sumber data berasal dari Server B
+    res.setHeader('X-Server', 'Server B');
+
     return res.status(200).json({
+      status: true,
       success: true,
       message: 'Berhasil mengambil dan mendekripsi data kategori dari db_b',
       total: decryptedRows.length,
-      data: decryptedRows
+      data: decryptedRows,
+      sumber: 'Server B'
     });
   } catch (error) {
     console.error('[STEP 3/4] ERROR mengambil/mendekripsi kategori:', error.message);
     return res.status(500).json({
+      status: false,
       success: false,
       message: 'Gagal mengambil atau mendekripsi data kategori',
       error: error.message
@@ -185,15 +191,21 @@ async function getProduk(req, res) {
     console.table(decryptedRows);
     console.log('============================================================\n');
 
+    // Tandai header respon bahwa sumber data berasal dari Server B
+    res.setHeader('X-Server', 'Server B');
+
     return res.status(200).json({
+      status: true,
       success: true,
       message: 'Berhasil mengambil dan mendekripsi data produk dari db_b (dengan relasi nama_kategori)',
       total: decryptedRows.length,
-      data: decryptedRows
+      data: decryptedRows,
+      sumber: 'Server B'
     });
   } catch (error) {
     console.error('[STEP 3/4] ERROR mengambil/mendekripsi produk:', error.message);
     return res.status(500).json({
+      status: false,
       success: false,
       message: 'Gagal mengambil atau mendekripsi data produk',
       error: error.message
@@ -206,3 +218,4 @@ module.exports = {
   getKategori,
   getProduk
 };
+

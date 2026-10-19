@@ -4,7 +4,10 @@
 // ============================================================
 
 const express = require('express');
-require('dotenv').config();
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 
 const apiRoutes = require('./routes/api');
 const pool = require('./config/db');
@@ -12,11 +15,20 @@ const pool = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Middleware CORS untuk komunikasi dengan frontend React
+const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true,
+  exposedHeaders: ['X-Server']
+}));
+
 // Middleware parsing JSON
 app.use(express.json());
 
 // Root endpoint untuk health check
 app.get('/', (req, res) => {
+  res.setHeader('X-Server', 'Server B');
   res.json({
     server: 'Server B',
     port: PORT,

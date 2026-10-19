@@ -4,7 +4,9 @@
 // ============================================================
 
 const express = require('express');
-require('dotenv').config();
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const apiRoutes = require('./routes/api');
 const pool = require('./config/db');
@@ -12,18 +14,28 @@ const pool = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Middleware CORS untuk komunikasi dengan frontend React
+const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true,
+  exposedHeaders: ['X-Server']
+}));
+
 // Middleware parsing JSON
 app.use(express.json());
 
 // Root endpoint untuk health check
 app.get('/', (req, res) => {
+  res.setHeader('X-Server', 'Server A');
   res.json({
     server: 'Server A',
     port: PORT,
     database: process.env.DB_NAME || 'db_a',
     status: 'Running',
     endpoints: [
-      { method: 'POST', path: '/api/kirim-data', description: 'Enkripsi data dari db_a dan kirim ke Server B' }
+      { method: 'POST', path: '/api/kirim-data', description: 'Enkripsi data dari db_a dan kirim ke Server B' },
+      { method: 'GET', path: '/api/kategori', description: 'Ambil data kategori dari db_a (Plaintext, Server Utama Fallback)' }
     ]
   });
 });
